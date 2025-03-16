@@ -82,7 +82,7 @@ public partial class Form1 : Form
         var tempD = (tempC + random.Next(3)+1) % 4;
         if (tempD == 0)
         {
-            tempD++;
+            tempD = 4;
         }
         SendKeys.SendWait($"{tempC}");
         SendKeys.SendWait($"{tempD}");
@@ -120,7 +120,7 @@ public partial class Form1 : Form
             secondDrum = (firstDrum + b) % 4;
             if(secondDrum == 0)
             {
-                secondDrum++;
+                secondDrum = 4;
             }
             //if(firstDrum == secondDrum)
             //{
