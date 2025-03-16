@@ -60,14 +60,35 @@ public partial class Form1 : Form
                     }
                     break;
                 case 6:
-                    // implement few inversions! which should be updated
                     UseInverted(true);
-                    shouldInvert = true;
-                    
+                    shouldInvert = true;                 
                     break;
+                case 7:
+                    SendSingleTap();
+                    break;
+                case 8:
+                    SendDoubleTap();
+                   break;
+
             }
         }
         base.WndProc(ref m);
+    }
+
+    private void SendDoubleTap()
+    {
+        var tempC = random.Next(4) + 1;
+        var tempD = random.Next(4) + 1;
+        SendKeys.SendWait($"{tempC}");
+        SendKeys.SendWait($"{tempD}");
+        lastToInvert = $"{tempC}{tempD}";
+    }
+
+    private void SendSingleTap()
+    {
+        var tempC = random.Next(4) + 1;
+        SendKeys.SendWait($"{tempC}");
+        lastToInvert = $"{tempC}";
     }
 
     private void ChangeInversionType()
@@ -138,6 +159,8 @@ public partial class Form1 : Form
         // Unregister the hotkey when the form is closed
         UnregisterHotKey(this.Handle, 5);
         UnregisterHotKey(this.Handle, 6);
+        UnregisterHotKey(this.Handle, 7);
+        UnregisterHotKey(this.Handle, 8);
         base.OnFormClosing(e);
     }
 
@@ -226,6 +249,8 @@ public partial class Form1 : Form
         //AnalyzeDrumSequence(LoadSequence(0));
         RegisterHotKey(this.Handle, 5, MOD_NONE, (int)Keys.Z);
         RegisterHotKey(this.Handle, 6, MOD_NONE, (int)Keys.X);
+        RegisterHotKey(this.Handle, 7, MOD_NONE, (int)Keys.N);
+        RegisterHotKey(this.Handle, 8, MOD_NONE, (int)Keys.M);
         StartSongWithSpacebar();
     }
 
