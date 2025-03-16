@@ -78,7 +78,12 @@ public partial class Form1 : Form
     private void SendDoubleTap()
     {
         var tempC = random.Next(4) + 1;
-        var tempD = random.Next(4) + 1;
+        //2 double drums cannot be the same
+        var tempD = (tempC + random.Next(3)+1) % 4;
+        if (tempD == 0)
+        {
+            tempD++;
+        }
         SendKeys.SendWait($"{tempC}");
         SendKeys.SendWait($"{tempD}");
         lastToInvert = $"{tempC}{tempD}";
