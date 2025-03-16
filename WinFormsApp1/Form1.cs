@@ -4,6 +4,7 @@ using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace WinFormsApp1;
 
@@ -19,6 +20,9 @@ public partial class Form1 : Form
     int globalIndex = 0;
     //string currentSequence = null;
     string currentSequence;
+    string lastToInvert = "1";
+    bool shouldInvert = false;
+    string inversionType = "43";
     Random random = new Random();
 
     // Register the hotkey
@@ -38,6 +42,16 @@ public partial class Form1 : Form
             switch (hotkeyId)
             {
                 case 5:
+                    // Inversion flow
+                    if (shouldInvert)
+                    {
+                        UseInverted(false);
+                        shouldInvert = false;
+                        break;
+                    }
+                    ChangeInversionType();
+
+                    //Standard flow
                     globalIndex = AnalyzeDrumSequenceSynch(currentSequence, globalIndex);
                     if(globalIndex >= currentSequence.Length)
                     {
@@ -45,9 +59,64 @@ public partial class Form1 : Form
                         globalIndex = 0;
                     }
                     break;
+                case 6:
+                    // implement few inversions! which should be updated
+                    UseInverted(true);
+                    shouldInvert = true;
+                    
+                    break;
             }
         }
         base.WndProc(ref m);
+    }
+
+    private void ChangeInversionType()
+    {
+        int firstNumber = random.Next(4) + 1;
+        int secondNumber = random.Next(3) + 1;
+        inversionType = $"{firstNumber}{secondNumber}";
+        //Debug.WriteLine($"ChangeInversionType:{inversionType}");
+    }
+
+    private string InvertWith(string value, string howToInvert)
+    {
+        //Debug.WriteLine($"InvertWith: value:{value}, howToInvert:{howToInvert}");
+        var firstDrum = 1;
+        var secondDrum = 1;
+        var x = int.Parse(value[0].ToString());
+        var y = int.Parse(howToInvert[0].ToString());
+        firstDrum = (x+y) % 4 + 1;
+        if (value.Length == 2)
+        {
+            //2 double drums cannot be the same
+            var b = int.Parse(howToInvert[1].ToString());
+            //if (b > 3) { throw new Exception("me debil?"); }
+            secondDrum = (firstDrum + b) % 4;
+            if(secondDrum == 0)
+            {
+                secondDrum++;
+            }
+            //if(firstDrum == secondDrum)
+            //{
+            //    throw new Exception("me idiot?");
+            //}
+            return $"{firstDrum}{secondDrum}";
+        }
+        return $"{firstDrum}";
+    }
+
+    private void UseInverted(bool isInverted)
+    {
+        string input = lastToInvert;
+        if (isInverted)
+        {
+            input = InvertWith(lastToInvert, inversionType);
+        }
+
+        foreach (var drum in input)
+        {
+            SendKeys.SendWait($"{drum}");
+        }
     }
 
     public Form1()
@@ -124,6 +193,7 @@ public partial class Form1 : Form
             case '3':
             case '4':
                 SendKeys.SendWait($"{c}");
+                lastToInvert = $"{c}";
                 break;
         }
 
@@ -143,6 +213,7 @@ public partial class Form1 : Form
                 case '4':
                     SendKeys.SendWait($"{secondDrum}");
                     index += 2;
+                    lastToInvert = $"{c}{secondDrum}";
                     break;
             }
         }
