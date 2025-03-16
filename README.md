@@ -9,4 +9,5 @@ Map needs to be reviewed after such creation, but I find it usefull especially f
 
 todo:
 -'X' button implementation; sometimes you want some parts to be more repeatable and You can even hear it - thats why combiantion 'Z' 'X' 'Z' 'X' 'Z' 'X' should somehow repeat same/similar patern without changing/updating sequence
+
 -store DrumSequences in *.txt file to let user change it
