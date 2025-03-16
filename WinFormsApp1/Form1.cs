@@ -37,32 +37,16 @@ public partial class Form1 : Form
             int hotkeyId = m.WParam.ToInt32();
             switch (hotkeyId)
             {
-                // I dont think i need dupa translator anymore tbh
-                //case 1:
-                //    SendKeys.SendWait("{4 1}");
-                //    // MessageBox.Show("'T' key pressed globally! Action triggered.");
-                //    break;
-                //case 2:
-                //    SendKeys.SendWait("{3 1}");
-                //    break;
-                //case 3:
-                //    SendKeys.SendWait("{2 1}");
-                //    break;
-                //case 4:
-                //    SendKeys.SendWait("{1 1}");
-                //    break;
                 case 5:
                     globalIndex = AnalyzeDrumSequenceSynch(currentSequence, globalIndex);
                     if(globalIndex >= currentSequence.Length)
                     {
                         currentSequence = GetRandomSequence();
                         globalIndex = 0;
-                        //throw new IndexOutOfRangeException();
                     }
                     break;
             }
         }
-
         base.WndProc(ref m);
     }
 
@@ -80,92 +64,11 @@ public partial class Form1 : Form
         return LoadSequence(randomIndex);
     }
 
-    private void OnKeyPress(object sender, KeyPressEventArgs e)
-    {
-        if (e.KeyChar == 't' || e.KeyChar == 'T')
-        {
-            SendKeys.SendWait("{3 1}");
-        }
-    }
-
-    private void button1_Click(object sender, EventArgs e)
-    {
-        Thread.Sleep(2000);
-        TestRunBot(null);
-    }
-
-    private static void TestRunBot(string[] args)
-    {
-        Random rand = new Random();
-        // Display message to inform the user that the bot is running
-        Console.WriteLine("Bot is running... It will start typing in the active window.");
-
-        // Run the bot for 5 seconds
-        DateTime endTime = DateTime.Now.AddSeconds(5);
-
-        while (DateTime.Now < endTime)
-        {
-            // Randomly select a key (1, 2, 3, 4)
-            int key = rand.Next(1, 5); // Random number between 1 and 4
-
-            // Simulate the key press
-            SendKeyPress(key);
-
-            // Wait for a random interval (between 100ms and 1000ms)
-            Thread.Sleep(rand.Next(100, 1001));
-        }
-
-        Console.WriteLine("Bot has finished typing.");
-    }
-
-    private static void SendKeyPress(int key)
-    {
-        switch (key)
-        {
-            case 1:
-                //SendKeys.Send("1");
-                SendKeys.SendWait("{1 5}");
-                break;
-            case 2:
-                SendKeys.SendWait("{2 5}");
-                break;
-            case 3:
-                SendKeys.SendWait("{3 5}");
-                break;
-            case 4:
-                SendKeys.SendWait("{4 5}");
-                break;
-            default:
-                break;
-        }
-        Console.WriteLine($"Key {key} pressed.");
-    }
-
-
-
-    private void button2_Click(object sender, EventArgs e)
-    {
-        //Thread.Sleep(1000);
-
-        // Register the hotkey (T key in this case)
-        //RegisterHotKey(this.Handle, 1, MOD_NONE, (int)Keys.D);
-        //RegisterHotKey(this.Handle, 2, MOD_NONE, (int)Keys.U);
-        //RegisterHotKey(this.Handle, 3, MOD_NONE, (int)Keys.P);
-        //RegisterHotKey(this.Handle, 4, MOD_NONE, (int)Keys.A);
-
-        RegisterHotKey(this.Handle, 5, MOD_NONE, (int)Keys.Z);
-
-        StartSongWithSpacebar();
-    }
-
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         // Unregister the hotkey when the form is closed
-        UnregisterHotKey(this.Handle, 1);
-        UnregisterHotKey(this.Handle, 2);
-        UnregisterHotKey(this.Handle, 3);
-        UnregisterHotKey(this.Handle, 4);
         UnregisterHotKey(this.Handle, 5);
+        UnregisterHotKey(this.Handle, 6);
         base.OnFormClosing(e);
     }
 
@@ -222,9 +125,6 @@ public partial class Form1 : Form
             case '4':
                 SendKeys.SendWait($"{c}");
                 break;
-            //case ',':
-            //    SendKeys.SendWait(" ");
-            //    break;
         }
 
         // Is double drum?
@@ -250,15 +150,16 @@ public partial class Form1 : Form
         return index;    
     }
 
-    private void TestRun()
-    {
-        StartSongWithSpacebar();
+    private void StartRhytmKeysTranslation()
+    {   
         //AnalyzeDrumSequence(LoadSequence(0));
         RegisterHotKey(this.Handle, 5, MOD_NONE, (int)Keys.Z);
+        RegisterHotKey(this.Handle, 6, MOD_NONE, (int)Keys.X);
+        StartSongWithSpacebar();
     }
 
     private void button3_Click(object sender, EventArgs e)
     {
-        TestRun();
+        StartRhytmKeysTranslation();
     }
 }
